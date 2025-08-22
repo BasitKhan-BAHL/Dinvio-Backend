@@ -3,6 +3,7 @@ package com.basitk.dinvio.resource;
 import com.basitk.dinvio.dto.base.BaseResponseDto;
 import com.basitk.dinvio.dto.login.LoginRequestDto;
 import com.basitk.dinvio.dto.login.LoginDataDto;
+import com.basitk.dinvio.dto.register.RegisterDataDto;
 import com.basitk.dinvio.dto.register.RegisterRequestDto;
 import com.basitk.dinvio.model.User;
 import com.basitk.dinvio.security.JwtService;
@@ -36,25 +37,28 @@ public class AuthResource {
         }
 
         String token;
-        if (Roles.ADMIN.equals(user.role)) {
-            token = jwtService.generateAdminToken(user.username, user.restaurantCode, user.userId, user.roleId);
+        String userId = user.getUserId();
+
+        if (Roles.ADMIN.equals(user.roleId)) {
+            token = jwtService.generateAdminToken(user.username, user.restaurantCode, userId, user.roleId);
         } else {
-            token = jwtService.generateUserToken(user.username, user.restaurantCode, user.userId, user.roleId);
+            token = jwtService.generateUserToken(user.username, user.restaurantCode, userId, user.roleId);
         }
 
         LoginDataDto loginData = new LoginDataDto(
                 token,
+                userId,
                 user.username,
-                user.role,
-                user.restaurantCode,
-                user.userId,
-                user.roleId
+                user.roleId,
+                Roles.getRoleName(user.roleId),
+                user.restaurantCode
         );
 
         return Response.ok(
                 new BaseResponseDto(true, "Login Successfully", loginData)
         ).build();
     }
+
 
     @POST
     @Path("/register")
@@ -65,23 +69,24 @@ public class AuthResource {
                     .build();
         }
 
-        if (User.find("user_id", request.userId).firstResult() != null) {
-            return Response.status(Response.Status.CONFLICT)
-                    .entity(new BaseResponseDto(false, "User ID already exists", null))
+        if (!Roles.isValidRole(request.roleId)) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new BaseResponseDto(false, "Invalid role ID provided", null))
                     .build();
         }
 
         User user = new User();
         user.username = request.username;
         user.password = BCrypt.hashpw(request.password, BCrypt.gensalt());
-        user.role = request.role;
-        user.restaurantCode = request.restaurantCode;
-        user.userId = request.userId;
         user.roleId = request.roleId;
+        user.restaurantCode = request.restaurantCode;
         user.persist();
 
+        String userId = user.getUserId();
+        RegisterDataDto registerData = new RegisterDataDto(userId);
+
         return Response.ok(
-                new BaseResponseDto(true, "User registered successfully", null)
+                new BaseResponseDto(true, "User registered successfully", registerData)
         ).build();
     }
 }

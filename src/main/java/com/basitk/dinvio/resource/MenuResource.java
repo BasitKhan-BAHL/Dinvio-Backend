@@ -1,45 +1,83 @@
 package com.basitk.dinvio.resource;
 
+import com.basitk.dinvio.dto.category.CategoryDataDto;
+import com.basitk.dinvio.dto.menu.MenuItemDataDto;
 import com.basitk.dinvio.dto.menu.MenuItemListRequestDto;
 import com.basitk.dinvio.dto.menu.MenuItemRequestDto;
 import com.basitk.dinvio.dto.base.BaseResponseDto;
+import com.basitk.dinvio.model.Category;
 import com.basitk.dinvio.model.Menu;
+import com.basitk.dinvio.security.JwtClaimExtractor;
+import jakarta.annotation.security.RolesAllowed;
+import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Path("/menu")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class MenuResource {
 
+    @Inject
+    JwtClaimExtractor jwtClaimExtractor;
+
     @POST
     @Path("/add")
+    @RolesAllowed("ADMIN")
     public Response addMenuItem(MenuItemRequestDto request) {
-        if (request.name == null || request.price == null) {
+        if (request.name == null || request.name.isBlank() || request.price == null) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(new BaseResponseDto(false, "Name and price are required", null))
                     .build();
         }
 
+        String restaurantCode = jwtClaimExtractor.getRestaurantCode();
+        String userId = jwtClaimExtractor.getUserId();
+
+        Category category = Category.find("categoryId = ?1 and restaurantCode = ?2",
+                new Object[]{request.categoryId, restaurantCode}).firstResult();
+        if (category == null) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(new BaseResponseDto(false, "Invalid category for this restaurant", null))
+                    .build();
+        }
+
+        Menu existingMenu = Menu.find("name = ?1 and categoryId = ?2 and restaurantCode = ?3",
+                new Object[]{request.name, request.categoryId, restaurantCode}).firstResult();
+
+        if (existingMenu != null) {
+            return Response.status(Response.Status.CONFLICT)
+                    .entity(new BaseResponseDto(false, "Menu item already exists in this category", null))
+                    .build();
+        }
+
         Menu item = new Menu();
-        item.category = request.category;
-        item.name = request.name;
+        item.name = request.name.trim();
         item.description = request.description;
         item.price = request.price;
-
+        item.categoryId = request.categoryId;
+        item.restaurantCode = restaurantCode;
+        item.userId = userId;
         item.persist();
 
+        String menuId = item.getMenuId();
+        MenuItemDataDto menuItemData = new MenuItemDataDto(menuId);
+
         return Response.ok(
-                new BaseResponseDto(true, "Menu item added successfully", null)
+                new BaseResponseDto(true, "Menu item added successfully", menuItemData)
         ).build();
     }
 
     @POST
     @Path("/bulk-add")
+    @RolesAllowed("ADMIN")
     public Response bulkAddMenuItems(MenuItemListRequestDto request) {
         if (request.items == null || request.items.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -47,13 +85,56 @@ public class MenuResource {
                     .build();
         }
 
+        String restaurantCode = jwtClaimExtractor.getRestaurantCode();
+        String userId = jwtClaimExtractor.getUserId();
+
+        Set<String> requestUniqueKeys = new HashSet<>();
+        for (MenuItemRequestDto req : request.items) {
+            if (req.name == null || req.price == null || req.categoryId == null) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(new BaseResponseDto(false,
+                                "Each item must have name, price, and categoryId", null))
+                        .build();
+            }
+
+            String key = req.name.trim().toLowerCase() + "|" + req.categoryId;
+            if (!requestUniqueKeys.add(key)) {
+                return Response.status(Response.Status.CONFLICT)
+                        .entity(new BaseResponseDto(false,
+                                "Duplicate menu item '" + req.name + "' found in request for category " + req.categoryId, null))
+                        .build();
+            }
+        }
+
         List<Menu> savedItems = new ArrayList<>();
         for (MenuItemRequestDto req : request.items) {
+            Category category = Category.find("_id = ?1 and restaurantCode = ?2",
+                            new ObjectId(req.categoryId), restaurantCode)
+                    .firstResult();
+            if (category == null) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(new BaseResponseDto(false,
+                                "Invalid categoryId for item: " + req.name, null))
+                        .build();
+            }
+
+            Menu existing = Menu.find("name = ?1 and categoryId = ?2 and restaurantCode = ?3",
+                            req.name, req.categoryId, restaurantCode)
+                    .firstResult();
+            if (existing != null) {
+                return Response.status(Response.Status.CONFLICT)
+                        .entity(new BaseResponseDto(false,
+                                "Menu item '" + req.name + "' already exists in this category for your restaurant", null))
+                        .build();
+            }
+
             Menu item = new Menu();
-            item.category = req.category;
             item.name = req.name;
             item.description = req.description;
             item.price = req.price;
+            item.categoryId = req.categoryId;
+            item.restaurantCode = restaurantCode;
+            item.userId = userId;
             item.persist();
             savedItems.add(item);
         }

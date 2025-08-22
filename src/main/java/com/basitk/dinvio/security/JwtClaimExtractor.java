@@ -3,7 +3,6 @@ package com.basitk.dinvio.security;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
 import jakarta.json.JsonNumber;
-import org.eclipse.microprofile.jwt.Claims;
 import org.eclipse.microprofile.jwt.JsonWebToken;
 
 @RequestScoped
@@ -27,8 +26,8 @@ public class JwtClaimExtractor {
         return jwt.getClaim("restaurant_code");
     }
 
-    public Long getUserId() {
-        return jwt.getClaim(Claims.preferred_username.name());
+    public String getUserId() {
+        return jwt.getSubject();
     }
 }
 

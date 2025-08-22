@@ -2,19 +2,22 @@ package com.basitk.dinvio.dto.login;
 
 public class LoginDataDto {
     public String token;
+    public String userId;
     public String username;
-    public String role;
-    public String restaurantCode;
-    public Integer userId;
     public Integer roleId;
+    public String roleName;
+    public String restaurantCode;
 
-    public LoginDataDto(String token, String username, String role, String restaurantCode, Integer userId, Integer roleId) {
+    public LoginDataDto() {
+    }
+
+    public LoginDataDto(String token, String userId, String username, Integer roleId, String roleName, String restaurantCode) {
         this.token = token;
-        this.username = username;
-        this.role = role;
-        this.restaurantCode = restaurantCode;
         this.userId = userId;
+        this.username = username;
         this.roleId = roleId;
+        this.roleName = roleName;
+        this.restaurantCode = restaurantCode;
     }
 
     public String getToken() {
@@ -25,36 +28,20 @@ public class LoginDataDto {
         this.token = token;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getRestaurantCode() {
-        return restaurantCode;
-    }
-
-    public void setRestaurantCode(String restaurantCode) {
-        this.restaurantCode = restaurantCode;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public Integer getRoleId() {
@@ -65,15 +52,31 @@ public class LoginDataDto {
         this.roleId = roleId;
     }
 
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
+    }
+
+    public String getRestaurantCode() {
+        return restaurantCode;
+    }
+
+    public void setRestaurantCode(String restaurantCode) {
+        this.restaurantCode = restaurantCode;
+    }
+
     @Override
     public String toString() {
         return "LoginDataDto{" +
                 "token='" + token + '\'' +
+                ", userId='" + userId + '\'' +
                 ", username='" + username + '\'' +
-                ", role='" + role + '\'' +
-                ", restaurantCode='" + restaurantCode + '\'' +
-                ", userId=" + userId +
                 ", roleId=" + roleId +
+                ", roleName='" + roleName + '\'' +
+                ", restaurantCode='" + restaurantCode + '\'' +
                 '}';
     }
 }

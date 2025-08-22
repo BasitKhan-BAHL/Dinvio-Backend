@@ -8,6 +8,9 @@ public class RegisterRequestDto {
     public Integer userId;
     public Integer roleId;
 
+    public RegisterRequestDto() {
+    }
+
     public RegisterRequestDto(String username, String password, String role, String restaurantCode, Integer userId, Integer roleId) {
         this.username = username;
         this.password = password;

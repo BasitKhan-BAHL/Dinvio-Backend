@@ -16,9 +16,13 @@ public class Category extends PanacheMongoEntity {
     @BsonProperty("icon")
     public String icon;
 
-    @BsonProperty("color1")
-    public String color1;
+    @BsonProperty("restaurantCode")
+    public String restaurantCode;
 
-    @BsonProperty("color2")
-    public String color2;
+    @BsonProperty("userId")
+    public String userId;
+
+    public String getCategoryId() {
+        return this.id != null ? this.id.toString() : null;
+    }
 }

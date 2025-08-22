@@ -19,4 +19,11 @@ public class CategoryListRequestDto {
     public void setItems(List<CategoryRequestDto> items) {
         this.items = items;
     }
+
+    @Override
+    public String toString() {
+        return "CategoryListRequestDto{" +
+                "items=" + items +
+                '}';
+    }
 }

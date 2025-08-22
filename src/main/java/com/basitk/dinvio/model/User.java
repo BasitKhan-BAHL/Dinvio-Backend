@@ -13,15 +13,13 @@ public class User extends PanacheMongoEntity {
     @BsonProperty("password")
     public String password;
 
-    @BsonProperty("role")
-    public String role;
+    @BsonProperty("roleId")
+    public Integer roleId;
 
-    @BsonProperty("restaurant_code")
+    @BsonProperty("restaurantCode")
     public String restaurantCode;
 
-    @BsonProperty("user_id")
-    public Integer userId;
-
-    @BsonProperty("role_id")
-    public Integer roleId;
+    public String getUserId() {
+        return this.id != null ? this.id.toString() : null;
+    }
 }
