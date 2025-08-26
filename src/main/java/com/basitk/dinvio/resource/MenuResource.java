@@ -1,6 +1,5 @@
 package com.basitk.dinvio.resource;
 
-import com.basitk.dinvio.dto.category.CategoryDataDto;
 import com.basitk.dinvio.dto.menu.MenuItemDataDto;
 import com.basitk.dinvio.dto.menu.MenuItemListRequestDto;
 import com.basitk.dinvio.dto.menu.MenuItemRequestDto;
@@ -68,7 +67,16 @@ public class MenuResource {
         item.persist();
 
         String menuId = item.getMenuId();
-        MenuItemDataDto menuItemData = new MenuItemDataDto(menuId);
+
+        MenuItemDataDto menuItemData = new MenuItemDataDto(
+                menuId,
+                item.name,
+                item.description,
+                item.price,
+                item.categoryId,
+                restaurantCode,
+                userId
+        );
 
         return Response.ok(
                 new BaseResponseDto(true, "Menu item added successfully", menuItemData)
@@ -139,17 +147,43 @@ public class MenuResource {
             savedItems.add(item);
         }
 
+        List<MenuItemDataDto> responseList = savedItems.stream()
+                .map(item -> new MenuItemDataDto(
+                        item.getMenuId(),
+                        item.name,
+                        item.description,
+                        item.price,
+                        item.categoryId,
+                        item.restaurantCode,
+                        item.userId
+                ))
+                .toList();
+
         return Response.ok(
-                new BaseResponseDto(true, "Bulk menu items added successfully", savedItems)
+                new BaseResponseDto(true, "Bulk menu items added successfully", responseList)
         ).build();
     }
 
     @GET
     @Path("/all")
+    @RolesAllowed({"ADMIN", "USER"})
     public Response getAllMenuItems() {
         List<Menu> items = Menu.listAll();
+
+        List<MenuItemDataDto> menuItemData = items.stream()
+                .map(item -> new MenuItemDataDto(
+                        item.id.toString(),
+                        item.name,
+                        item.description,
+                        item.price,
+                        item.categoryId,
+                        item.restaurantCode,
+                        item.userId
+                ))
+                .toList();
+
         return Response.ok(
-                new BaseResponseDto(true, "Menu items retrieved successfully", items)
+                new BaseResponseDto(true, "Menu items retrieved successfully", menuItemData)
         ).build();
     }
 }

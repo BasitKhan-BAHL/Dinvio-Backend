@@ -1,13 +1,16 @@
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/GreetingResource.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/base/BaseResponseDto.java
+/home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/category/CategoryDataDto.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/category/CategoryListRequestDto.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/category/CategoryRequestDto.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/login/LoginDataDto.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/login/LoginRequestDto.java
+/home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/menu/MenuItemDataDto.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/menu/MenuItemListRequestDto.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/menu/MenuItemRequestDto.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/order/OrderItemRequestDto.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/order/OrderRequestDto.java
+/home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/register/RegisterDataDto.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/register/RegisterRequestDto.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/model/Category.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/model/Menu.java

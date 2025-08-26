@@ -1,14 +1,17 @@
 com/basitk/dinvio/dto/category/CategoryListRequestDto.class
+com/basitk/dinvio/dto/category/CategoryDataDto.class
 com/basitk/dinvio/model/Order.class
 com/basitk/dinvio/resource/AuthResource.class
 com/basitk/dinvio/model/OrderItem.class
 com/basitk/dinvio/dto/menu/MenuItemRequestDto.class
+com/basitk/dinvio/dto/register/RegisterDataDto.class
 com/basitk/dinvio/security/TokenUtils.class
 com/basitk/dinvio/model/User.class
 com/basitk/dinvio/security/JwtService.class
 com/basitk/dinvio/security/JwtValidationFilter$1.class
 com/basitk/dinvio/dto/order/OrderItemRequestDto.class
 com/basitk/dinvio/model/Category.class
+com/basitk/dinvio/dto/menu/MenuItemDataDto.class
 com/basitk/dinvio/security/JwtClaimExtractor.class
 com/basitk/dinvio/dto/register/RegisterRequestDto.class
 com/basitk/dinvio/resource/OrderResource.class

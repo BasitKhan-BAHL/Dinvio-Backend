@@ -56,7 +56,15 @@ public class CategoryResource {
         category.persist();
 
         String categoryId = category.getCategoryId();
-        CategoryDataDto categoryData = new CategoryDataDto(categoryId);
+
+        CategoryDataDto categoryData = new CategoryDataDto(
+                categoryId,
+                category.name,
+                category.description,
+                category.icon,
+                restaurantCode,
+                userId
+        );
 
         return Response.ok(
                 new BaseResponseDto(true, "Category added successfully", categoryData)
@@ -108,6 +116,7 @@ public class CategoryResource {
         }
 
         List<Category> savedCategories = new ArrayList<>();
+
         for (CategoryRequestDto req : request.items) {
             Category category = new Category();
             category.name = req.name.trim();
@@ -119,8 +128,19 @@ public class CategoryResource {
             savedCategories.add(category);
         }
 
+        List<CategoryDataDto> responseList = savedCategories.stream()
+                .map(cat -> new CategoryDataDto(
+                        cat.getCategoryId(),
+                        cat.name,
+                        cat.description,
+                        cat.icon,
+                        cat.restaurantCode,
+                        cat.userId
+                ))
+                .toList();
+
         return Response.ok(
-                new BaseResponseDto(true, "Bulk categories added successfully", savedCategories)
+                new BaseResponseDto(true, "Bulk categories added successfully", responseList)
         ).build();
     }
 
@@ -129,8 +149,20 @@ public class CategoryResource {
     @RolesAllowed({"ADMIN", "USER"})
     public Response getAllCategories() {
         List<Category> categories = Category.listAll();
+
+        List<CategoryDataDto> categoryData = categories.stream()
+                .map(cat -> new CategoryDataDto(
+                        cat.id.toString(),
+                        cat.name,
+                        cat.description,
+                        cat.icon,
+                        cat.restaurantCode,
+                        cat.userId
+                ))
+                .toList();
+
         return Response.ok(
-                new BaseResponseDto(true, "Categories retrieved successfully", categories)
+                new BaseResponseDto(true, "Categories retrieved successfully", categoryData)
         ).build();
     }
 }
