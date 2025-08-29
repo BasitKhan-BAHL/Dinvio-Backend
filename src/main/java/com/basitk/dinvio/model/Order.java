@@ -14,6 +14,9 @@ public class Order extends PanacheMongoEntity {
     @BsonProperty("restaurantCode")
     public String restaurantCode;
 
+    @BsonProperty("userId")
+    public String userId;
+
     @BsonProperty("items")
     public List<OrderItem> items;
 

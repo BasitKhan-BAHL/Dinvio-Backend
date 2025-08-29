@@ -8,6 +8,8 @@
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/menu/MenuItemDataDto.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/menu/MenuItemListRequestDto.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/menu/MenuItemRequestDto.java
+/home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/order/OrderDataDto.java
+/home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/order/OrderItemDataDto.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/order/OrderItemRequestDto.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/order/OrderRequestDto.java
 /home/bahl/Desktop/Practice/Dinvio/Dinvio-Backend/src/main/java/com/basitk/dinvio/dto/register/RegisterDataDto.java

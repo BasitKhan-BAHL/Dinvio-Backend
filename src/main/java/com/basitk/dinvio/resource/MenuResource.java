@@ -114,7 +114,6 @@ public class MenuResource {
             }
         }
 
-        List<Menu> savedItems = new ArrayList<>();
         for (MenuItemRequestDto req : request.items) {
             Category category = Category.find("_id = ?1 and restaurantCode = ?2",
                             new ObjectId(req.categoryId), restaurantCode)
@@ -125,19 +124,27 @@ public class MenuResource {
                                 "Invalid categoryId for item: " + req.name, null))
                         .build();
             }
+        }
 
-            Menu existing = Menu.find("name = ?1 and categoryId = ?2 and restaurantCode = ?3",
-                            req.name, req.categoryId, restaurantCode)
-                    .firstResult();
-            if (existing != null) {
-                return Response.status(Response.Status.CONFLICT)
-                        .entity(new BaseResponseDto(false,
-                                "Menu item '" + req.name + "' already exists in this category for your restaurant", null))
-                        .build();
-            }
+        List<String> names = request.items.stream()
+                .map(req -> req.name.trim())
+                .toList();
 
+        List<Menu> existing = Menu.find("restaurantCode = ?1 and name in ?2", restaurantCode, names).list();
+        if (!existing.isEmpty()) {
+            List<String> existingNames = existing.stream()
+                    .map(menu -> menu.name)
+                    .toList();
+            return Response.status(Response.Status.CONFLICT)
+                    .entity(new BaseResponseDto(false,
+                            "Menu items already exist for this restaurant: " + existingNames, null))
+                    .build();
+        }
+
+        List<Menu> savedItems = new ArrayList<>();
+        for (MenuItemRequestDto req : request.items) {
             Menu item = new Menu();
-            item.name = req.name;
+            item.name = req.name.trim();
             item.description = req.description;
             item.price = req.price;
             item.categoryId = req.categoryId;
